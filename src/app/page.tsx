@@ -1,6 +1,8 @@
 import ImagesList from "~/app/_components/ImagesList";
 import TheNav from "~/app/_components/TheNav";
 
+export const dynamic = "force-dynamic";
+
 export default function HomePage() {
 	return (
 		<div>
