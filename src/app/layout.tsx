@@ -6,6 +6,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { extractRouterConfig } from "uploadthing/server";
+import TheNav from "~/app/_components/TheNav";
 import { ourFileRouter } from "~/app/api/uploadthing/core";
 
 export const metadata: Metadata = {
@@ -21,10 +22,11 @@ const geist = Geist({
 
 export default function RootLayout({
 	children,
-}: Readonly<{ children: React.ReactNode }>) {
+	modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
 	return (
 		<ClerkProvider>
-			<html lang="en" className={`${geist.variable} dark`}>
+			<html lang="en" className={`${geist.variable} dark overflow-x-hidden`}>
 				<NextSSRPlugin
 					/**
 					 * The `extractRouterConfig` will extract **only** the route configs
@@ -34,7 +36,14 @@ export default function RootLayout({
 					 */
 					routerConfig={extractRouterConfig(ourFileRouter)}
 				/>
-				<body>{children}</body>
+				<body>
+					<TheNav />
+					<main className="flex min-h-screen flex-col p-4 text-center">
+						{children}
+						{modal}
+					</main>
+					<div id="modal-root" />
+				</body>
 			</html>
 		</ClerkProvider>
 	);
