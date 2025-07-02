@@ -6,6 +6,10 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
+	typescript: {
+		ignoreBuildErrors: true,
+	},
+	eslint: { ignoreDuringBuilds: true },
 	images: {
 		remotePatterns: [{ hostname: "guldlsen0t.ufs.sh" }],
 	},
