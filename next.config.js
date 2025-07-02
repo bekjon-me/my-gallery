@@ -11,7 +11,10 @@ const config = {
 	},
 	eslint: { ignoreDuringBuilds: true },
 	images: {
-		remotePatterns: [{ hostname: "guldlsen0t.ufs.sh" }],
+		remotePatterns: [
+			{ hostname: "guldlsen0t.ufs.sh" },
+			{ hostname: "utfs.io" },
+		],
 	},
 };
 
