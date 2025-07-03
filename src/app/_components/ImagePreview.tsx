@@ -1,4 +1,5 @@
-import { createClerkClient } from "@clerk/backend";
+import { clerkClient } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { deleteImage, getImage } from "~/server/queries";
 
@@ -6,13 +7,14 @@ export default async function ImagePreview(props: { photoId: string }) {
 	const idAsNumber = Number(props.photoId);
 	if (Number.isNaN(idAsNumber)) throw new Error("Invalid photo id");
 
-	const clerkClient = createClerkClient({
-		secretKey: process.env.CLERK_SECRET_KEY,
-	});
-
+	const client = await clerkClient();
 	const image = await getImage(idAsNumber);
 
-	const userInfo = await clerkClient.users.getUser(image.userId);
+	if (!image) {
+		redirect("/");
+	}
+
+	const userInfo = await client.users.getUser(image.userId);
 
 	return (
 		<div className="flex h-full w-screen min-w-0 items-center justify-center text-white">

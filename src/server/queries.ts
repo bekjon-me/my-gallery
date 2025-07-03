@@ -2,7 +2,8 @@ import "server-only";
 
 import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { notFound, redirect } from "next/navigation";
 import { db } from "~/server/db";
 import { images } from "./db/schema";
 
@@ -30,7 +31,7 @@ export async function getImage(id: number) {
 		where: (model, { eq }) => eq(model.id, id),
 	});
 
-	if (!image) throw new Error("No image found");
+	if (!image) return null;
 
 	if (image.userId !== user.userId) throw new Error("Unauthorized");
 
@@ -45,7 +46,6 @@ export async function deleteImage(id: number) {
 		.delete(images)
 		.where(and(eq(images.id, id), eq(images.userId, user.userId)));
 
-	console.log("deleted");
-
+	revalidatePath("/");
 	redirect("/");
 }

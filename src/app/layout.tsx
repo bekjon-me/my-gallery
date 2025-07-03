@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { Toaster } from "sonner";
 import { extractRouterConfig } from "uploadthing/server";
 import TheNav from "~/app/_components/TheNav";
 import { ourFileRouter } from "~/app/api/uploadthing/core";
@@ -40,9 +41,10 @@ export default function RootLayout({
 					<TheNav />
 					<main className="flex min-h-screen flex-col p-4 text-center">
 						{children}
-						{modal}
+						{modal && modal}
 					</main>
 					<div id="modal-root" />
+					<Toaster />
 				</body>
 			</html>
 		</ClerkProvider>

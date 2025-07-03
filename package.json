@@ -20,7 +20,6 @@
 	"dependencies": {
 		"@clerk/backend": "^2.3.1",
 		"@clerk/nextjs": "^6.23.2",
-		"@headlessui/react": "^2.2.4",
 		"@neondatabase/serverless": "^1.0.1",
 		"@radix-ui/react-dialog": "^1.1.14",
 		"@radix-ui/react-slot": "^1.2.3",
