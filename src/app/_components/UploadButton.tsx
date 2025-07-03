@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { usePostHog } from "posthog-js/react";
 import { toast } from "sonner";
 import { useUploadThing } from "~/utils/uploadthing";
 
@@ -56,7 +57,7 @@ function LoadingSpinnerSVG() {
 			height="24"
 			viewBox="0 0 24 24"
 			xmlns="http://www.w3.org/2000/svg"
-			fill="white"
+			fill="black"
 		>
 			<title id="spinnerTitle">Loading spinner</title>
 			<path
@@ -73,12 +74,17 @@ function LoadingSpinnerSVG() {
 
 export default function UploadButton() {
 	const router = useRouter();
+	const posthog = usePostHog();
 
 	const { inputProps } = useUploadThingInputProps("imageUploader", {
 		onUploadBegin() {
+			posthog.capture("upload_begin");
 			toast(
-				<div className="flex items-center gap-2 text-white">
-					<LoadingSpinnerSVG /> <span className="text-lg">Uploading...</span>
+				<div className="flex items-center gap-2">
+					<div className="animate-spin">
+						<LoadingSpinnerSVG />
+					</div>
+					<span className="text-lg">Uploading...</span>
 				</div>,
 				{
 					duration: 100000,
@@ -87,6 +93,7 @@ export default function UploadButton() {
 			);
 		},
 		onUploadError(error) {
+			posthog.capture("upload_error", { error });
 			toast.dismiss("upload-begin");
 			toast.error("Upload failed");
 		},
