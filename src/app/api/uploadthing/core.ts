@@ -22,17 +22,22 @@ export const ourFileRouter = {
 	})
 		// Set permissions and file types for this FileRoute
 		.middleware(async ({ req }) => {
-			// This code runs on your server before upload
-			const user = await auth();
+			try {
+				const user = await auth();
+				console.log("AUTH:", user);
 
-			// If you throw, the user will not be able to upload
-			if (!user?.userId) throw new UploadThingError("Unauthorized");
+				if (!user?.userId) throw new UploadThingError("Unauthorized");
 
-			const { success } = await ratelimit.limit(user.userId);
-			if (!success) throw new UploadThingError("Ratelimited");
+				const { success } = await ratelimit.limit(user.userId);
+				console.log("RATE LIMIT:", success);
 
-			// Whatever is returned here is accessible in onUploadComplete as `metadata`
-			return { userId: user.userId };
+				if (!success) throw new UploadThingError("Ratelimited");
+
+				return { userId: user.userId };
+			} catch (err) {
+				console.error("❌ Middleware error:", err);
+				throw new UploadThingError("Middleware failed");
+			}
 		})
 		.onUploadComplete(async ({ metadata, file }) => {
 			// This code RUNS ON YOUR SERVER after upload
